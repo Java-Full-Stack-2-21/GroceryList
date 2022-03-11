@@ -1,6 +1,8 @@
 package repositories;
 
 import models.GroceryList;
+import services.GroceryListService;
+import util.ConnectionUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,17 +10,11 @@ import java.util.List;
 
 public class GroceryListDAOImpl implements GroceryListDAO{
 
-    String url = "jdbc:postgresql://[CONNECTION_URL]/[DATABASE_NAME]";
-    String username = "postgres";
-    String password = "";
-
-
     @Override
     public List<GroceryList> getAllListsGivenUserId(Integer userId) {
         List<GroceryList> lists = new ArrayList<>();
 
-        try {
-            Connection conn = DriverManager.getConnection(this.url, this.username, this.password);
+        try(Connection conn = ConnectionUtil.getConnection()) {
             String sql = "SELECT * FROM lists WHERE user_id_fk = ? ORDER BY list_id;";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -38,9 +34,33 @@ public class GroceryListDAOImpl implements GroceryListDAO{
     }
 
     @Override
+    public GroceryList getOneList(Integer listId) {
+        GroceryList groceryList = null;
+
+        try(Connection conn = ConnectionUtil.getConnection()){
+            String sql = "SELECT * FROM lists WHERE list_id = ?;";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, listId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                groceryList = new GroceryList(rs.getInt(1), rs.getString(2), rs.getInt(3));
+            }
+
+
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
+
+        return groceryList;
+    }
+
+
+    @Override
     public void createList(GroceryList groceryList) {
-        try{
-            Connection conn = DriverManager.getConnection(this.url, this.username, this.password);
+        try(Connection conn = ConnectionUtil.getConnection()){
             String sql = "INSERT INTO lists (list_name, user_id_fk) VALUES (?, ?);";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -56,8 +76,7 @@ public class GroceryListDAOImpl implements GroceryListDAO{
 
     @Override
     public void deleteList(Integer listId) {
-        try{
-            Connection conn = DriverManager.getConnection(this.url, this.username, this.password);
+        try(Connection conn = ConnectionUtil.getConnection()){
             String sql = "DELETE FROM lists WHERE list_id = ?;";
 
             PreparedStatement ps = conn.prepareStatement(sql);

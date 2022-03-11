@@ -1,6 +1,7 @@
 package repositories;
 
 import models.User;
+import util.ConnectionUtil;
 
 import java.sql.*;
 
@@ -33,17 +34,16 @@ import java.sql.*;
 *
 * */
 public class UserDAOImpl implements UserDAO{
-    String url = "jdbc:postgresql://[CONNECTION_URL]/[DATABASE_NAME]";
-    String username = "postgres";
-    String password = "";
 
     @Override
     public User getUserGivenUsername(String username) {
         User user = null;
 
-        try {
-            //retrieve active connection from our database
-            Connection conn = DriverManager.getConnection(this.url, this.username, this.password);
+        //retrieve active connection from our database
+        try{
+
+            Connection conn = ConnectionUtil.getConnection();
+
             String sql = "SELECT * FROM users WHERE user_username = ?;";
 
             //preparing our sql statement
@@ -58,6 +58,8 @@ public class UserDAOImpl implements UserDAO{
                 user = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getTimestamp(6));
             }
 
+            conn.close();
+
         }catch (SQLException sqle){
             sqle.printStackTrace();
         }
@@ -68,8 +70,8 @@ public class UserDAOImpl implements UserDAO{
     @Override
     public void createUser(User user) {
 
-        try{
-            Connection conn = DriverManager.getConnection(this.url, this.username, this.password);
+        try(Connection conn = ConnectionUtil.getConnection()){
+
 
             String sql = "INSERT INTO users (user_username, user_password, user_firstname, user_lastname) VALUES (?, ?, ?, ?);";
 

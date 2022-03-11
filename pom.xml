@@ -14,6 +14,56 @@
     </properties>
 
 
+    <!--
+        Maven is a dependency manager and build tool
+
+        There main packaging formats:
+            - jar file
+            - war file
+
+        Maven has a build lifecycle:
+            - mvn validate: validates that the project is a correct maven project structure
+            - mvn compile: compiles our source code to .class files
+            - mvn test: run all of our unit test
+            - mvn package: packages the project into a correct jar or war file.
+            - mvn verify: integration tests
+            - mvn install: makes project available for local maven dependencies
+            - mvn deploy: makes project available remote
+
+    -->
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- NOTE: We don't need a groupId specification because the group is
+                     org.apache.maven.plugins ...which is assumed by default.
+                 -->
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+
+                    <archive>
+                        <manifest>
+                            <mainClass>MainDriver</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
 
         <dependency>

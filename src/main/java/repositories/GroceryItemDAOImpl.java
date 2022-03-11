@@ -1,6 +1,7 @@
 package repositories;
 
 import models.GroceryItem;
+import util.ConnectionUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,16 +9,11 @@ import java.util.List;
 
 public class GroceryItemDAOImpl implements GroceryItemDAO{
 
-    String url = "jdbc:postgresql://[CONNECTION_URL]/[DATABASE_NAME]";
-    String username = "postgres";
-    String password = "";
-
     @Override
     public List<GroceryItem> getAllItemsGivenListId(Integer listId) {
         List<GroceryItem> items = new ArrayList<>();
 
-        try{
-            Connection conn = DriverManager.getConnection(this.url, this.username, this.password);
+        try(Connection conn = ConnectionUtil.getConnection()){
             String sql = "SELECT * FROM items WHERE list_id_fk = ? ORDER BY item_id;";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -45,8 +41,7 @@ public class GroceryItemDAOImpl implements GroceryItemDAO{
 
     @Override
     public void markItemInCart(Integer itemId) {
-        try{
-            Connection conn = DriverManager.getConnection(this.url, this.username, this.password);
+        try(Connection conn = ConnectionUtil.getConnection()){
             String sql = "UPDATE items SET item_in_cart = TRUE WHERE item_id = ?;";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -61,8 +56,7 @@ public class GroceryItemDAOImpl implements GroceryItemDAO{
 
     @Override
     public void createItemForListWithQuantity(GroceryItem item) {
-        try{
-            Connection conn = DriverManager.getConnection(this.url, this.username, this.password);
+        try(Connection conn = ConnectionUtil.getConnection()){
             String sql = "INSERT INTO items (item_name, item_quantity, list_id_fk) VALUES (?, ?, ?);";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -80,8 +74,7 @@ public class GroceryItemDAOImpl implements GroceryItemDAO{
 
     @Override
     public void createItemForListWithoutQuantity(GroceryItem item) {
-        try{
-            Connection conn = DriverManager.getConnection(this.url, this.username, this.password);
+        try(Connection conn = ConnectionUtil.getConnection()){
             String sql = "INSERT INTO items (item_name, list_id_fk) VALUES (?, ?);";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -97,8 +90,7 @@ public class GroceryItemDAOImpl implements GroceryItemDAO{
 
     @Override
     public void deleteItemFromList(Integer itemId) {
-        try{
-            Connection conn = DriverManager.getConnection(this.url, this.username, this.password);
+        try(Connection conn = ConnectionUtil.getConnection()){
             String sql = "DELETE FROM items WHERE item_id = ?;";
 
             PreparedStatement ps = conn.prepareStatement(sql);
