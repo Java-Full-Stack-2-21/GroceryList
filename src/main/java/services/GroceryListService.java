@@ -36,7 +36,8 @@ public class GroceryListService {
     }
 
     public Boolean isListOurs(User user, Integer listId){
-            return getOne(listId).getUserId().equals(user.getId());
+            GroceryList groceryList = this.groceryListDAO.getOneList(listId);
+            return groceryList.getUserId().equals(user.getId());
     }
 
 
