@@ -4,6 +4,7 @@ import controllers.GroceryListController;
 import controllers.UserController;
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
+import io.javalin.http.staticfiles.Location;
 import views.Landing;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -12,8 +13,8 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 public class MainDriver {
     public static void main(String[] args) {
         //Landing.view();
-        Javalin app = Javalin.create(javalinConfig -> {
-            javalinConfig.enableCorsForOrigin("");
+        Javalin app = Javalin.create(config -> {
+            config.addStaticFiles("/", Location.CLASSPATH);
         }).start(9001);
 
         UserController userController = new UserController();
