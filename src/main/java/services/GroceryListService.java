@@ -5,6 +5,7 @@ import models.User;
 import repositories.GroceryListDAO;
 import repositories.GroceryListDAOImpl;
 
+import java.util.Collections;
 import java.util.List;
 
 public class GroceryListService {
@@ -27,8 +28,16 @@ public class GroceryListService {
         return this.groceryListDAO.getOneList(listId);
     }
 
-    public void createList(GroceryList groceryList){
-        this.groceryListDAO.createList(groceryList);
+    public GroceryList createList(GroceryList groceryList){
+
+        if(this.groceryListDAO.createList(groceryList)){
+            List<GroceryList> lists = groceryListDAO.getAllListsGivenUserId(groceryList.getUserId());
+
+            Collections.sort(lists, (a, b) -> a.getId().compareTo(b.getId()));
+            return lists.get(lists.size() - 1);
+        }
+
+        return null;
     }
 
     public void deleteList(Integer listId){

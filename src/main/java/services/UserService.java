@@ -34,7 +34,15 @@ public class UserService {
         return user;
     }
 
-    public void createUser(User user){
+    public Boolean createUser(User user){
+        //get user from db
+        User userFromDb = userDAO.getUserGivenUsername(user.getUsername());
+
+        if(userFromDb != null){
+            return Boolean.FALSE;
+        }
+
         this.userDAO.createUser(user);
+        return Boolean.TRUE;
     }
 }

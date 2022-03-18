@@ -59,7 +59,7 @@ public class GroceryListDAOImpl implements GroceryListDAO{
 
 
     @Override
-    public void createList(GroceryList groceryList) {
+    public Boolean createList(GroceryList groceryList) {
         try(Connection conn = ConnectionUtil.getConnection()){
             String sql = "INSERT INTO lists (list_name, user_id_fk) VALUES (?, ?);";
 
@@ -67,11 +67,13 @@ public class GroceryListDAOImpl implements GroceryListDAO{
             ps.setString(1, groceryList.getName());
             ps.setInt(2,groceryList.getUserId());
 
-            ps.executeUpdate();
+            return ps.executeUpdate() != 0;
 
         }catch (SQLException sqle){
             sqle.printStackTrace();
         }
+
+        return false;
     }
 
     @Override

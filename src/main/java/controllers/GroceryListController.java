@@ -28,9 +28,14 @@ public class GroceryListController {
     public void createList(Context context){
         GroceryList groceryList = context.bodyAsClass(GroceryList.class);
 
-        groceryListService.createList(groceryList);
+        GroceryList groceryListFromDb = groceryListService.createList(groceryList);
+        if(groceryListFromDb == null){
+            context.json(new JsonResponse(false, "an error has occurred for creating list", null));
+        }else{
+            context.json(new JsonResponse(true, "list created for user " + groceryList.getUserId(), groceryListFromDb));
+        }
 
-        context.json(new JsonResponse(true, "list created for user " + groceryList.getUserId(), null));
+
     }
 
     public void deleteList(Context context) {

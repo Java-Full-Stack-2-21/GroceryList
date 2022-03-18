@@ -19,11 +19,16 @@ public class UserController {
     }
 
     public void createUser(Context context){
+
+        JsonResponse jsonResponse;
         //get user from json string
         User user = context.bodyAsClass(User.class);
-        userService.createUser(user);
+        if(userService.createUser(user)){
+            jsonResponse = new JsonResponse(true, "user has been created", null);
+        }else{
+            jsonResponse = new JsonResponse(false, "username already exist", null);
+        }
 
-        JsonResponse jsonResponse = new JsonResponse(true, "user has been created", null);
         context.json(jsonResponse);
     }
 

@@ -31,7 +31,7 @@
     font-weight: bold;
 }
 
-#delete-btn{
+.delete-btn{
     width: 25px;
     height: 25px;
     position: absolute;

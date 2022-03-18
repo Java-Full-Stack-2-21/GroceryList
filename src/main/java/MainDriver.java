@@ -3,9 +3,7 @@ import controllers.GroceryItemController;
 import controllers.GroceryListController;
 import controllers.UserController;
 import io.javalin.Javalin;
-import io.javalin.http.Handler;
 import io.javalin.http.staticfiles.Location;
-import views.Landing;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
