@@ -1,3 +1,12 @@
+window.onload = async function(){
+    let response = await fetch(`${domain}/session`);
+    let responseBody = await response.json();
+
+    if(responseBody.success){
+        window.location = "./dashboard";
+    }
+}
+
 
 /* function that runs when the page loads */
 document.getElementById("login-form").addEventListener("submit", async function (event){
@@ -15,7 +24,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
     }
 
     //send the http request
-    let response = await fetch(`${domain}/login`, {
+    let response = await fetch(`${domain}/session`, {
         method: "POST",
         body: JSON.stringify(user)
     })
@@ -34,6 +43,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
         //redirect page to dashboard page if credentials were successful
 
        // window.location = "./dashboard?userId=" + responseBody.data.id
+       //http://localhost:9001/dashboard?userId=4
         window.location = `./dashboard?userId=${responseBody.data.id}`
 
     }

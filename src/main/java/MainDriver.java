@@ -1,6 +1,6 @@
-
 import controllers.GroceryItemController;
 import controllers.GroceryListController;
+import controllers.SessionController;
 import controllers.UserController;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
@@ -10,7 +10,6 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class MainDriver {
     public static void main(String[] args) {
-        //Landing.view();
         Javalin app = Javalin.create(config -> {
             config.addStaticFiles("/", Location.CLASSPATH);
         }).start(9001);
@@ -18,6 +17,7 @@ public class MainDriver {
         UserController userController = new UserController();
         GroceryListController groceryListController = new GroceryListController();
         GroceryItemController groceryItemController = new GroceryItemController();
+        SessionController sessionController = new SessionController();
 
         /// :: method reference symbol
         //user endpoints
@@ -54,8 +54,13 @@ public class MainDriver {
                 });
             });
 
+            path("session", () -> {
+                post(sessionController::login);
+                get(sessionController::checkSession);
+                delete(sessionController::logout);
+            });
+
             post("/user", userController::createUser);
-            post("/login", userController::login);
         });
 
 

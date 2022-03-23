@@ -32,20 +32,6 @@ public class UserController {
         context.json(jsonResponse);
     }
 
-    public void login(Context context){
-        JsonResponse jsonResponse;
 
-        User credentials = context.bodyAsClass(User.class);
-
-        User userFromDb = userService.validateCredentials(credentials.getUsername(), credentials.getPassword());
-
-        if(userFromDb == null){
-            jsonResponse = new JsonResponse(false, "invalid username or password", null);
-        }else{
-            jsonResponse = new JsonResponse(true, "login successful", userFromDb);
-        }
-
-        context.json(jsonResponse);
-    }
 
 }

@@ -1,16 +1,19 @@
-let userId;
+let user;
 
-window.onload = function(){
+window.onload = async function(){
 
     //this is used to retrieve query param
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-        get: (searchParams, prop) => searchParams.get(prop),
-      });
+    let response = await fetch(`${domain}/session`);
 
-    userId = params.userId; // "some_value"
+    let responseBody = await response.json();
+
+    if(!responseBody.success){
+        window.location = "../";
+    }
 
 
-    console.log(userId)
+    user = responseBody.data; // "some_value"
+
 
     getAllLists()
 
@@ -23,7 +26,7 @@ async function getAllLists(){
     /* let listContainerElem = document.getElementById("list-container");
     listContainerElem.innerHTML = "";  */
     
-    let response = await fetch(`${domain}/list?userId=${userId}`);
+    let response = await fetch(`${domain}/list?userId=${user.id}`);
 
     let responseBody = await response.json();
 
@@ -70,7 +73,7 @@ async function createNewList(event){
     let createListInputElem = document.getElementById("list-name");
 
     //send request to create list
-    let list = {id: 0, name: createListInputElem.value, userId: userId}
+    let list = {id: 0, name: createListInputElem.value, userId: user.id}
     
     let response = await fetch(`${domain}/list`,{
         method: "POST",
